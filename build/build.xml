@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<project name="buildVerificaResultadoSorteio" basedir="../." default="start">
+
+	<property name="src.dir" location="src" />
+	<property name="bin.dir" location="bin" />
+	<property name="lib.dir" location="lib" />
+	<property name="config.dir" location="config" />
+	<property name="dist.dir" location="dist" />
+	<property name="dist.config.dir" value="${dist.dir}/config" />
+	<property name="dist.lib.dir" value="${dist.dir}/lib" />
+	<property name="jar.file" value="${dist.dir}/VerificaResultadoSorteio.jar" />
+	
+	<path id="build.classpath">
+    	<fileset dir="${lib.dir}">
+	    	<include name="**/*.jar" />
+	    </fileset>
+	</path>
+	
+	<target name="clean">
+		<delete dir="${bin.dir}" />
+		<delete dir="${dist.config.dir}" />
+		<delete dir="${dist.lib.dir}" />
+		<delete file="${jar.file}" />
+	</target>
+	
+	<target name="createDir">
+		<mkdir dir="${bin.dir}" />
+		<mkdir dir="${dist.config.dir}" />
+		<mkdir dir="${dist.lib.dir}" />
+	</target>
+	
+	<target name="compile" depends="clean, createDir">
+		<javac srcdir="${src.dir}" destdir="${bin.dir}" classpathref="build.classpath" 
+			includeantruntime="false" />
+	</target>
+	
+	<target name="jar" depends="compile">
+		<jar destfile="${jar.file}" basedir="${bin.dir}">
+			<manifest>
+				<attribute name="Class-Path" value="lib/HttpAccess.jar" />
+				<attribute name="Main-Class" value="vitim.main.Start" />
+			</manifest>
+		</jar>
+		<copy todir="${dist.config.dir}">
+			<fileset dir="${config.dir}" />
+		</copy>
+		<copy todir="${dist.lib.dir}">
+			<fileset dir="${lib.dir}">
+				<include name="**/*.jar"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="start" depends="jar">
+		<description>Target Start</description>
+	</target>
+	
+</project>
